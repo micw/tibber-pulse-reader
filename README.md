@@ -10,6 +10,25 @@ This is an early version with poor documentation and a lot work-in-progress.
 * configure via `application.yaml` config file
 * see `application.yaml.example` for examples of config variables
 
+## Running  (docker)
+docker run -it --rm \
+  -e "TIBBER_PULSE_SOURCE=http" \
+  [...]
+  ghcr.io/micw/tibber-pulse-reader:master
+  
+# Running (native)
+
+Pre-built jars can be downloaded from https://mega.nz/folder/F6x0WKjB#AIfMjKHa5gU_aWJEyhrP3w . To run it, you need a Java Runtime Environment (JRE) with version 11 or higher installed. Config can be passed as environment variables or by creating appliucation.yaml in the working directory (e.g. next to the downloaded jar file).
+
+Example:
+
+echo "TIBBER_PULSE_SOURCE: http" > application.yaml
+echo "TIBBER_PULSE_HOST: tibberbridge.localnet" >> application.yaml
+[...]
+java -Xmx25M -jar tibber-pulse-reader.master.jar 
+
+Memory assignment of the process can be tuned by the -Xmx option - adjust it to your needs so that the process does not get an out of memory error.
+
 ## Modes of access
 
 ### HTTP access
