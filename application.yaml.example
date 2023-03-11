@@ -1,0 +1,18 @@
+LOG_LEVEL: info
+
+TIBBER_PULSE_SOURCE: http
+TIBBER_PULSE_HOST: tibber_bridge.localnet
+TIBBER_PULSE_USERNAME: admin
+TIBBER_PULSE_PASSWORD: ABCD-1234
+
+# run every 15 seconds (default)
+#TIBBER_PULSE_CRON:*/15 * * * * *
+
+# The following will change in one of the next commits!
+publish:
+  mqtt:
+    host: mqtt.localnet
+    username: tibberdata
+    password: secret
+    topic: grid/{nameOrObisCode}
+    payload: '{value}'
