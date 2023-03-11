@@ -20,7 +20,7 @@ public class SMLDecoderTests {
 			SMLDecoder.decode(Hex.decodeHex(payload));
 		})
 			.isInstanceOf(IOException.class)
-			.hasMessage("Invalid SML payload");
+			.hasMessageStartingWith("Invalid SML payload: 1c1b1b1");
 	}
 	@Test
 	public void testSMLDecoderInvalidEndSequence() throws Exception {
@@ -30,7 +30,7 @@ public class SMLDecoderTests {
 			SMLDecoder.decode(Hex.decodeHex(payload));
 		})
 			.isInstanceOf(IOException.class)
-			.hasMessage("Invalid SML payload");
+			.hasMessageStartingWith("Invalid SML payload: 1b1b1b1");
 	}
 	@Test
 	public void testSMLDecoderInvalidCRC() throws Exception {
