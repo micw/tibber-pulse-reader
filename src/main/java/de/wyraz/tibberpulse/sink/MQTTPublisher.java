@@ -79,8 +79,8 @@ public class MQTTPublisher implements IMeterDataPublisher {
 			return;
 		}
 		for (SMLMeterData.Reading reading: data.getReadings()) {
-			String topic=replace(mqttTopic,reading);
-			String payload=replace(mqttPayload,reading);
+			String topic=replace(mqttTopic,data.getMeterId(),reading);
+			String payload=replace(mqttPayload,data.getMeterId(),reading);
 			try {
 				mqttClient.publish(topic, payload.getBytes(StandardCharsets.UTF_8),0,false);
 			} catch (MqttException ex) {
@@ -90,9 +90,9 @@ public class MQTTPublisher implements IMeterDataPublisher {
 		}
 	}
 	
-	protected static String replace(String template, SMLMeterData.Reading reading) {
+	protected static String replace(String template, String meterId, SMLMeterData.Reading reading) {
 		return template
-			.replace("{name}",StringUtils.firstNonBlank(reading.getName(),"unknown"))
+			.replace("{meterId}",StringUtils.firstNonBlank(reading.getName(),"unknown"))
 			.replace("{obisCode}",StringUtils.firstNonBlank(reading.getObisCode(),"unknown"))
 			.replace("{nameOrObisCode}",StringUtils.firstNonBlank(reading.getName(),reading.getObisCode(),"unknown"))
 			.replace("{unit}",StringUtils.firstNonBlank(reading.getUnit(),""))

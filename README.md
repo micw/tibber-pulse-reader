@@ -29,3 +29,10 @@ To access the MQTT data, the Tibber Pulse Gateway must be modified to talk to a 
 ### MQTT publisher
 
 * publishes readings via MQTT
+* Topic and payload placeholders:
+    * `{meterId}`: The id of the meter like '01EBZ0123456789' or 'unknown' if no meter ID is received
+    * `{obisCode}`: The OBIS code of the reading
+    * `{name}`: A friendly name of the OBIS code like 'energyImportTotal' or blank if no name is known
+    * `{nameOrObisCode}`: A friendly name of the OBIS code or the OBIS code if the name is not known
+    * `{value}`: The numeric value of the reading
+    * `{unit}`: The unit of the reading or blank if there is no unit
