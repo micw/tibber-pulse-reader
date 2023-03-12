@@ -10,14 +10,17 @@ import java.util.ArrayList;
 
 import org.apache.commons.codec.binary.Hex;
 import org.openmuc.jsml.structures.ASNObject;
+import org.openmuc.jsml.structures.Integer16;
 import org.openmuc.jsml.structures.Integer32;
 import org.openmuc.jsml.structures.Integer8;
 import org.openmuc.jsml.structures.OctetString;
 import org.openmuc.jsml.structures.SmlList;
 import org.openmuc.jsml.structures.SmlListEntry;
 import org.openmuc.jsml.structures.SmlMessage;
+import org.openmuc.jsml.structures.Unsigned16;
 import org.openmuc.jsml.structures.Unsigned32;
 import org.openmuc.jsml.structures.Unsigned64;
+import org.openmuc.jsml.structures.Unsigned8;
 import org.openmuc.jsml.structures.responses.SmlGetListRes;
 import org.openmuc.jsml.structures.responses.SmlPublicCloseRes;
 import org.openmuc.jsml.structures.responses.SmlPublicOpenRes;
@@ -155,9 +158,41 @@ public class SMLDecoder {
 		}
 		
 		int sc=(scaler==null)?0:scaler.getIntVal();
+
+		if (asn instanceof Integer8) {
+			byte val=((Integer8) asn).getVal();
+			if (sc==0) {
+				return val;
+			}
+			return new BigDecimal(val).scaleByPowerOfTen(sc);
+		}
+
+		if (asn instanceof Integer16) {
+			short val=((Integer16) asn).getVal();
+			if (sc==0) {
+				return val;
+			}
+			return new BigDecimal(val).scaleByPowerOfTen(sc);
+		}
 		
 		if (asn instanceof Integer32) {
 			int val=((Integer32) asn).getVal();
+			if (sc==0) {
+				return val;
+			}
+			return new BigDecimal(val).scaleByPowerOfTen(sc);
+		}
+
+		if (asn instanceof Unsigned8) {
+			int val=((Unsigned8) asn).getVal();
+			if (sc==0) {
+				return val;
+			}
+			return new BigDecimal(val).scaleByPowerOfTen(sc);
+		}
+
+		if (asn instanceof Unsigned16) {
+			int val=((Unsigned16) asn).getVal();
 			if (sc==0) {
 				return val;
 			}
