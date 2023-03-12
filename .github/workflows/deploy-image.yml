@@ -38,13 +38,13 @@ jobs:
       - name: Build with Maven
         run: mvn --batch-mode --update-snapshots package
         
-      - name: Upload jar to mega.nz
-        uses: Difegue/action-megacmd@043c6d2a167af3ae0904fc88c6b2829e4140dc8d
-        with:
-          args: put target/tibber-pulse-reader-1.0.0-SNAPSHOT.jar /tibber-pulse-reader/tibber-pulse-reader.${{ github.ref_name }}.jar
-        env:
-          USERNAME: ${{ secrets.MEGA_USERNAME }}
-          PASSWORD: ${{ secrets.MEGA_PASSWORD }}
+#      - name: Upload jar to mega.nz
+#        uses: Difegue/action-megacmd@043c6d2a167af3ae0904fc88c6b2829e4140dc8d
+#        with:
+#          args: put target/tibber-pulse-reader-1.0.0-SNAPSHOT.jar /tibber-pulse-reader/tibber-pulse-reader.${{ github.ref_name }}.jar
+#        env:
+#          USERNAME: ${{ secrets.MEGA_USERNAME }}
+#          PASSWORD: ${{ secrets.MEGA_PASSWORD }}
 
       - name: Build and push Docker image
         uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
