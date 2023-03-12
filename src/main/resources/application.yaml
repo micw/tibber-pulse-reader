@@ -1,0 +1,25 @@
+tibber:
+  pulse:
+    source: ${TIBBER_PULSE_SOURCE}
+    http:
+      host: ${TIBBER_PULSE_HOST}
+      nodeId: ${TIBBER_PULSE_NODE_ID:1}
+      url: ${TIBBER_PULSE_URL:http://${tibber.pulse.http.host}/data.json?node_id=${tibber.pulse.http.nodeId}}
+      username: ${TIBBER_PULSE_USERNAME:}
+      password: ${TIBBER_PULSE_PASSWORD:}
+      cron: ${TIBBER_PULSE_CRON:*/15 * * * * *}
+
+logging:
+  level:
+    ROOT: warn
+    de.wyraz.tibberpulse: ${LOG_LEVEL:info}
+    
+publish:
+  mqtt:
+    enabled: "${PUBLISH_MQTT_ENABLED:false}"
+    host: "${PUBLISH_MQTT_HOST}"
+    port: "${PUBLISH_MQTT_PORT:1883}"
+    username: "${PUBLISH_MQTT_USERNAME:}"
+    password: "${PUBLISH_MQTT_PASSWORD:}"
+    topic: "${PUBLISH_MQTT_TOPIC:{meterId}/{nameOrObisCode}}"
+    payload: "${PUBLISH_MQTT_VALUE:{value}}"
