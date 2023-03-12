@@ -52,8 +52,10 @@ public class MQTTPublisher implements IMeterDataPublisher {
 		options.setAutomaticReconnect(false);
 		options.setCleanSession(true);
 		options.setConnectionTimeout(10);
-		options.setUserName(mqttUsername);
-		options.setPassword(mqttPassword.toCharArray());
+		if (!StringUtils.isAnyBlank(mqttUsername, mqttPassword)) {
+			options.setUserName(mqttUsername);
+			options.setPassword(mqttPassword.toCharArray());
+		}
 		mqttClient.setCallback(new MqttCallback() {
 			
 			@Override

@@ -22,6 +22,13 @@ docker run -it --rm \
 
 * pass all config parameters as environment variables
 * alternatively, create an `application.yaml` and mount it to the docker container at `/application.yaml`
+
+
+To fetch the latest docker image, run:
+
+```
+docker pull ghcr.io/micw/tibber-pulse-reader:master
+```
   
 # Running (native)
 
@@ -49,8 +56,8 @@ Configuration parameters:
 * `TIBBER_PULSE_SOURCE=http` (required) - enable the HTTP based access to Tibber Pulse Bridge
 * `TIBBER_PULSE_HOST` (required) - Hostname or IP address of the Tibber Pulse Bridge
 * `TIBBER_PULSE_NODE_ID` (default 1) - ID of the connected node (Tibber Pulse IR) - only required if more than one node is connected to the Tibber Pulse Bridge
-* `TIBBER_PULSE_USERNAME`(required) - Username to access the Tibber Pulse Bridge (usually `admin`)
-* `TIBBER_PULSE_PASSWORD`(required) - Password to access the Tibber Pulse Bridge (the initial password is printed on the QR-code of your Tibber Pulse Gateway)
+* `TIBBER_PULSE_USERNAME` (optional) - Username to access the Tibber Pulse Bridge (usually `admin`)
+* `TIBBER_PULSE_PASSWORD` (optional) - Password to access the Tibber Pulse Bridge (the initial password is printed on the QR-code of your Tibber Pulse Gateway)
 * `TIBBER_PULSE_CRON` (default `*/15 * * * * *`) - Cron expression how often the data should be read from Tibber Pulse Bridge. The default is every 15 seconds
 
 ### MQTT access
