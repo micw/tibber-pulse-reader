@@ -96,3 +96,4 @@ Configuration parameters:
 ## Other configuration
 
 * `LOG_LEVEL` (default `info`) - Log level to use by the application. Valid values are `debug`, `info`, `warn` and `error`.
+    * run with `debug` to see all SML messages before/after decoding
