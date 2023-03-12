@@ -35,8 +35,8 @@ public class TibberPulseReader {
 			} else {
 				System.err.println(error.toString());
 			}
+			System.exit(1);
 		}
-		System.exit(0);
 	}
 
 }

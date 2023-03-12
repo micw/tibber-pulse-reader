@@ -196,7 +196,7 @@ public class SMLDecoder {
 	
 	protected static byte[] extractMessage(byte[] smlPayload) throws IOException {
 		try {
-			return new MessageExtractor(new DataInputStream(new ByteArrayInputStream(smlPayload)),0).getSmlMessage();
+			return new MessageExtractor(new DataInputStream(new ByteArrayInputStream(smlPayload)),1000).getSmlMessage();
 		} catch (IOException ex) {
 			if ("Timeout".equals(ex.getMessage())) {
 				throw new IOException("Invalid SML payload: "+Hex.encodeHexString(smlPayload));

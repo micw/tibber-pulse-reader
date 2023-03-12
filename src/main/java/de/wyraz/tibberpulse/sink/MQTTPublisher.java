@@ -16,11 +16,13 @@ import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 
 import de.wyraz.tibberpulse.sml.SMLMeterData;
 
 @Service
+@ConditionalOnProperty(name = "publish.mqtt.enabled", havingValue = "true")
 public class MQTTPublisher implements IMeterDataPublisher {
 	
 	@Value("${publish.mqtt.host}")
@@ -92,7 +94,7 @@ public class MQTTPublisher implements IMeterDataPublisher {
 	
 	protected static String replace(String template, String meterId, SMLMeterData.Reading reading) {
 		return template
-			.replace("{meterId}",StringUtils.firstNonBlank(reading.getName(),"unknown"))
+			.replace("{meterId}",StringUtils.firstNonBlank(meterId,"unknown"))
 			.replace("{obisCode}",StringUtils.firstNonBlank(reading.getObisCode(),"unknown"))
 			.replace("{nameOrObisCode}",StringUtils.firstNonBlank(reading.getName(),reading.getObisCode(),"unknown"))
 			.replace("{unit}",StringUtils.firstNonBlank(reading.getUnit(),""))

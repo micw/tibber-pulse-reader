@@ -8,11 +8,11 @@ TIBBER_PULSE_PASSWORD: ABCD-1234
 # run every 15 seconds (default)
 #TIBBER_PULSE_CRON:*/15 * * * * *
 
-# The following will change in one of the next commits!
-publish:
-  mqtt:
-    host: mqtt.localnet
-    username: tibberdata
-    password: secret
-    topic: grid/{nameOrObisCode}
-    payload: '{value}'
+# enable and configure publishing via MQTT
+# PUBLISH_MQTT_ENABLED: true
+# PUBLISH_MQTT_HOST: mqtt.localnet
+# PUBLISH_MQTT_PORT: 1883
+# PUBLISH_MQTT_USERNAME: tibberdata
+# PUBLISH_MQTT_PASSWORD: secret
+# PUBLISH_MQTT_TOPIC: "{meterId}/{nameOrObisCode}"
+# PUBLISH_MQTT_VALUE: "{value}"
