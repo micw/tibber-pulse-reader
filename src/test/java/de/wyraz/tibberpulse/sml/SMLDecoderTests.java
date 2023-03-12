@@ -56,6 +56,45 @@ public class SMLDecoderTests {
 		
 		assertThat(data.getMeterId()).isEqualTo("1EBZ0100597780");
 		
+		assertThat(data.getReadings())
+			.isNotNull()
+			.extracting(Object::toString)
+			.containsExactlyInAnyOrder(
+					  "1-0:1.8.0*255 / energyImportTotal = 28877149.75495 WATT_HOUR",
+					  "1-0:1.8.1*255 / energyImportTariff1 = 28876125.75495 WATT_HOUR",
+					  "1-0:1.8.2*255 / energyImportTariff2 = 1024.00000 WATT_HOUR",
+					  "1-0:2.8.0*255 / energyExportTotal = 2262.00390 WATT_HOUR",
+					  "1-0:16.7.0*255 / powerTotal = 809.02 WATT",
+					  "1-0:36.7.0*255 / powerL1 = 227.68 WATT",
+					  "1-0:56.7.0*255 / powerL2 = 342.97 WATT",
+					  "1-0:76.7.0*255 / powerL3 = 238.37 WATT"
+					);
+		
 	}
+	
+	/**
+	 * Initial test with data from my own meter
+	 */
+	@Test
+	public void testSMLDecoderEFR() throws Exception {
+		String payload="1b1b1b1b010101017605080e16b66200620072630101760107ffffffffffff0502af5ce80b0a014546522102cd630c7262016502af5ce5016333fe007605080e16b762006200726307017707ffffffffffff0b0a014546522102cd630c070100620affff7262016502af5ce579770701006032010101010101044546520177070100600100ff010101010b0a014546522102cd630c0177070100010800ff641c40047262016502af5ce5621e52ff65016d58b80177070100020800ff017262016502af5ce5621e52ff650286c57c017707010000020000010101010630332e30300177070100605a0201010101010342bd01770701006161000001010101030000017707010060320104010101010850312e322e31320177070100603204040101010103042201010163c14a007605080e16b862006200726302017101639568000000001b1b1b1b1a0309d3";
+				
+		SMLMeterData data=SMLDecoder.decode(Hex.decodeHex(payload));
+		
+		System.err.println(data);
+		
+		assertThat(data).isNotNull();
+		
+		assertThat(data.getMeterId()).isEqualTo("1EFR3347014668");
+		
+		assertThat(data.getReadings())
+			.isNotNull()
+			.extracting(Object::toString)
+			.containsExactlyInAnyOrder(
+					 "1-0:1.8.0*255 / energyImportTotal = 2394335.2 WATT_HOUR",
+					 "1-0:2.8.0*255 / energyExportTotal = 4238681.2 WATT_HOUR"
+					);
 
+	}
+	
 }

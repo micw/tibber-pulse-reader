@@ -16,6 +16,7 @@ import org.openmuc.jsml.structures.OctetString;
 import org.openmuc.jsml.structures.SmlList;
 import org.openmuc.jsml.structures.SmlListEntry;
 import org.openmuc.jsml.structures.SmlMessage;
+import org.openmuc.jsml.structures.Unsigned32;
 import org.openmuc.jsml.structures.Unsigned64;
 import org.openmuc.jsml.structures.responses.SmlGetListRes;
 import org.openmuc.jsml.structures.responses.SmlPublicCloseRes;
@@ -94,10 +95,37 @@ public class SMLDecoder {
 			SmlListEntry e=(SmlListEntry) asn;
 
 			String obisCode=decodeObisCode(e.getObjName());
-			if ("129-129:199.130.3*255".equals(obisCode)) { // manufacturer name - already part of the meter id
+			
+//			System.err.println(obisCode+" "+e.getValue());
+			
+			if ("129-129:199.130.3*255".equals(obisCode)) { // manufacturer id
 				return;
 			}
-			if ("1-0:0.0.9*255".equals(obisCode)) { // meter serial - already part of the meter id
+			if ("1-0:0.0.9*255".equals(obisCode)) { // meter serial
+				return;
+			}
+			if ("1-0:96.1.0*255".equals(obisCode)) { // meter id
+				return;
+			}
+			if ("1-0:96.50.1*1".equals(obisCode)) { // manufacturer id
+				return;
+			}
+			if ("1-0:96.50.1*4".equals(obisCode)) { // manufacturer id
+				return;
+			}
+			if ("1-0:96.50.1*4".equals(obisCode)) { // hardware version
+				return;
+			}
+			if ("1-0:96.50.4*4".equals(obisCode)) { // parameter version
+				return;
+			}
+			if ("1-0:96.90.2*1".equals(obisCode)) { // firmware checksum
+				return;
+			}
+			if ("1-0:0.2.0*0".equals(obisCode)) { // firmware version
+				return;
+			}
+			if ("1-0:97.97.0*0".equals(obisCode)) { // status register
 				return;
 			}
 			
@@ -129,19 +157,27 @@ public class SMLDecoder {
 		int sc=(scaler==null)?0:scaler.getIntVal();
 		
 		if (asn instanceof Integer32) {
-			int i=((Integer32) asn).getVal();
+			int val=((Integer32) asn).getVal();
 			if (sc==0) {
-				return i;
+				return val;
 			}
-			return new BigDecimal(i).scaleByPowerOfTen(sc);
+			return new BigDecimal(val).scaleByPowerOfTen(sc);
 		}
 		
-		if (asn instanceof Unsigned64) {
-			long l=((Unsigned64) asn).getVal();
+		if (asn instanceof Unsigned32) {
+			int val=((Unsigned32) asn).getVal();
 			if (sc==0) {
-				return l;
+				return val;
 			}
-			return new BigDecimal(l).scaleByPowerOfTen(sc);
+			return new BigDecimal(val).scaleByPowerOfTen(sc);
+		}
+
+		if (asn instanceof Unsigned64) {
+			long val=((Unsigned64) asn).getVal();
+			if (sc==0) {
+				return val;
+			}
+			return new BigDecimal(val).scaleByPowerOfTen(sc);
 		}
 		
 		log.warn("Number format not implemented: {}",asn.getClass().getName());

@@ -24,7 +24,6 @@ public class MeterDataHandler {
 		if (publishers==null || publishers.length==0) {
 			log.warn("No publishers are configured.");
 		}
-		
 	}
 	
 	public void publish(SMLMeterData data) throws IOException {
