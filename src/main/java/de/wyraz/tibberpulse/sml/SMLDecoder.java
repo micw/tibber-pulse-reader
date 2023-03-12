@@ -37,6 +37,11 @@ public class SMLDecoder {
 	protected static final Logger log = LoggerFactory.getLogger(SMLDecoder.class);
 	
 	public static SMLMeterData decode(byte[] smlPayload) throws IOException {
+		
+		if (log.isDebugEnabled()) {
+			log.debug("Parsing SML: {}",Hex.encodeHexString(smlPayload));
+		}
+		
 		byte[] messagePayload=extractMessage(smlPayload);
 		
 		DataInputStream din=new DataInputStream(new ByteArrayInputStream(messagePayload));

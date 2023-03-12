@@ -76,7 +76,7 @@ public class TibberPulseHttpReader implements CommandLineRunner {
 				}
 				return;
 			}
-
+			
 			SMLMeterData data;
 			try {
 				data=SMLDecoder.decode(payload);
