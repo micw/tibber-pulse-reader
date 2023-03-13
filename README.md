@@ -97,3 +97,41 @@ Configuration parameters:
 
 * `LOG_LEVEL` (default `info`) - Log level to use by the application. Valid values are `debug`, `info`, `warn` and `error`.
     * run with `debug` to see all SML messages before/after decoding
+
+### Filtering readings
+
+The config parameter `PUBLISH_FILTERS` allows to specify a list of filters applied to readings. Multiple filters are separated by whitespace or newline.
+
+A filter consists of a field selector (OBIS code or name) and a rule name (see below). Field names an rule names are not case sensitive.
+
+Example:
+
+Input:
+```
+1-0:1.8.0*255 / energyImportTotal = 123123.45 WATT_HOURS
+1-0:2.8.0*255 / energyExportTotal = 345234.56 WATT_HOURS
+1-0:16.7.0*255 / powerTotal = 11111.22 WATT
+1-0:36.7.0*255 / powerL1 = 22333.33 WATT
+```
+
+Filters:
+```
+1-0:1.8.0*255=IGNORE
+powerL1=IGNORE
+energyExportTotal=kWh
+powerL1=KILOWATT
+```
+
+Result:
+```
+1-0:2.8.0*255 / energyExportTotal = 345.23456 KILOWATT_HOURS
+1-0:16.7.0*255 / powerTotal = 11.11122 KILOWATT
+```
+
+The following rules are allowed:
+
+* `IGNORE` - the reading will not be published
+* `KILOWATT` - if the reading is in WATT, it will be converted to KILOWATT
+    * `kW` - alias for `KILOWATT`
+* `KILOWATT_HOURS` - if the reading is in WATT_HOURS, it will be converted to KILOWATT_HOURS
+    * `kWh` - alias for `KILOWATT_HOURS`

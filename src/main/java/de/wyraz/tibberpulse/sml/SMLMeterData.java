@@ -10,6 +10,17 @@ public class SMLMeterData {
 		protected Number value;
 		protected String unit;
 		
+		public Reading() {
+		}
+		
+		public Reading(String obisCode, String name, Number value, String unit) {
+			super();
+			this.obisCode = obisCode;
+			this.name = name;
+			this.value = value;
+			this.unit = unit;
+		}
+
 		public String getName() {
 			return name;
 		}
@@ -37,6 +48,15 @@ public class SMLMeterData {
 			return sb.toString();
 		}
 	}
+	
+	public SMLMeterData() {
+	}
+	
+	public SMLMeterData(String meterId, List<Reading> readings) {
+		this.meterId=meterId;
+		this.readings=readings;
+	}
+	
 	
 	protected String meterId;
 	protected List<Reading> readings;
