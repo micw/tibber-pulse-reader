@@ -51,7 +51,7 @@ public class MeterReadingFilter {
 		KILOWATT_HOURS("kWh") {
 			@Override
 			Reading apply(Reading input) {
-				return scaleUnit(input, "WATT_HOURS", "KILOWATT_HOURS", -3);
+				return scaleUnit(input, "WATT_HOUR", "KILOWATT_HOUR", -3);
 			}
 		},
 		
