@@ -15,7 +15,7 @@ logging:
     de.wyraz.tibberpulse: ${LOG_LEVEL:info}
     
 publish:
-  filters: ${PUBLISH_FILTERS:""}
+  filters: ${PUBLISH_FILTERS:}
   mqtt:
     enabled: "${PUBLISH_MQTT_ENABLED:false}"
     host: "${PUBLISH_MQTT_HOST}"
