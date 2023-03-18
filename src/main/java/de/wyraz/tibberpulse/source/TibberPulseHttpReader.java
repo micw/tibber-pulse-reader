@@ -25,6 +25,10 @@ public class TibberPulseHttpReader implements CommandLineRunner {
 
 	protected final Logger log = LoggerFactory.getLogger(getClass());
 
+
+	@Value("${sml.ignoreCrcErrors:false}")
+	protected boolean ignoreCrcErrors;
+	
 	@Value("${tibber.pulse.http.url}")
 	protected String tibberPulseUrl;
 
@@ -79,7 +83,7 @@ public class TibberPulseHttpReader implements CommandLineRunner {
 			
 			SMLMeterData data;
 			try {
-				data=SMLDecoder.decode(payload);
+				data=SMLDecoder.decode(payload, !ignoreCrcErrors);
 			} catch (Exception ex) {
 				log.warn("Unable to parse SML from response",ex);
 				if (shutdownOnError) {

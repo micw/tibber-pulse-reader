@@ -97,6 +97,7 @@ Configuration parameters:
 
 * `LOG_LEVEL` (default `info`) - Log level to use by the application. Valid values are `debug`, `info`, `warn` and `error`.
     * run with `debug` to see all SML messages before/after decoding
+* `IGNORE_SML_CRC_ERRORS` (default `false`) - If set to true, an SML message containing CRC errors will still be processed. Only usefull for testing with problematic meters.
 
 ### Filtering readings
 

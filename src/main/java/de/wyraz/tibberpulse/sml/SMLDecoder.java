@@ -39,8 +39,12 @@ import de.wyraz.tibberpulse.sml.SMLMeterData.Reading;
 public class SMLDecoder {
 	
 	protected static final Logger log = LoggerFactory.getLogger(SMLDecoder.class);
-	
+
 	public static SMLMeterData decode(byte[] smlPayload) throws IOException {
+		return decode(smlPayload, true);
+	}
+	
+	public static SMLMeterData decode(byte[] smlPayload, boolean failOnCorruptMessagePart) throws IOException {
 		
 		if (log.isDebugEnabled()) {
 			log.debug("Parsing SML: {}",Hex.encodeHexString(smlPayload));
@@ -54,16 +58,29 @@ public class SMLDecoder {
 		
 		SmlMessage sml=new SmlMessage();
 		while (din.available()>0) {
-			if (!sml.decodeAndCheck(din)) {
-				throw new IOException("SML message crc error");
+			boolean crcOk=sml.decodeAndCheck(din);
+			if (!crcOk) {
+				if (failOnCorruptMessagePart) {
+					throw new IOException("SML message crc error");
+				} else {
+					log.info("SML message crc error - proceeding with incomplete or corrupt message.");
+				}
 			}
 			decodeASNObject(result, sml.getMessageBody().getChoice());
+			if (!crcOk) {
+				break;
+			}
 		}
 		
 		return result;
 	}
 	
 	protected static void decodeASNObject(SMLMeterData result, ASNObject asn) {
+		
+		if (asn==null) {
+			return; // may happen on incomplete SML message
+		}
+		
 		if (asn instanceof SmlPublicCloseRes) {
 			// no usable data
 			return;
@@ -98,6 +115,10 @@ public class SMLDecoder {
 			SmlListEntry e=(SmlListEntry) asn;
 
 			String obisCode=decodeObisCode(e.getObjName());
+			
+			if (obisCode==null) {
+				return; // may happen on incomplete SML message
+			}
 			
 //			System.err.println(obisCode+" "+e.getValue());
 			

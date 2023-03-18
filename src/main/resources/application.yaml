@@ -9,6 +9,9 @@ tibber:
       password: ${TIBBER_PULSE_PASSWORD:}
       cron: ${TIBBER_PULSE_CRON:*/15 * * * * *}
 
+sml:
+  ignoreCrcErrors: ${IGNORE_SML_CRC_ERRORS:false}
+
 logging:
   level:
     ROOT: warn
