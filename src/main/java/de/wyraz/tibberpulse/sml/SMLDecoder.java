@@ -9,26 +9,20 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 
 import org.apache.commons.codec.binary.Hex;
-import org.openmuc.jsml.structures.ASNObject;
-import org.openmuc.jsml.structures.Integer16;
-import org.openmuc.jsml.structures.Integer32;
-import org.openmuc.jsml.structures.Integer8;
 import org.openmuc.jsml.structures.OctetString;
-import org.openmuc.jsml.structures.SmlList;
-import org.openmuc.jsml.structures.SmlListEntry;
-import org.openmuc.jsml.structures.SmlMessage;
-import org.openmuc.jsml.structures.Unsigned16;
-import org.openmuc.jsml.structures.Unsigned32;
-import org.openmuc.jsml.structures.Unsigned64;
-import org.openmuc.jsml.structures.Unsigned8;
-import org.openmuc.jsml.structures.responses.SmlGetListRes;
-import org.openmuc.jsml.structures.responses.SmlPublicCloseRes;
-import org.openmuc.jsml.structures.responses.SmlPublicOpenRes;
 import org.openmuc.jsml.transport.MessageExtractor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import de.wyraz.sml.AbstractSMLObject;
+import de.wyraz.sml.SMLGetListResponse;
+import de.wyraz.sml.SMLListEntry;
+import de.wyraz.sml.SMLMessage;
+import de.wyraz.sml.SMLMessageParser;
+import de.wyraz.sml.SMLPublicCloseResponse;
+import de.wyraz.sml.SMLPublicOpenResponse;
 import de.wyraz.tibberpulse.sml.SMLMeterData.Reading;
+import de.wyraz.tibberpulse.util.ByteUtil;
 
 /**
  * SML Spec: https://www.bsi.bund.de/SharedDocs/Downloads/DE/BSI/Publikationen/TechnischeRichtlinien/TR03109/TR-03109-1_Anlage_Feinspezifikation_Drahtgebundene_LMN-Schnittstelle_Teilb.pdf?__blob=publicationFile&v=1
@@ -40,6 +34,8 @@ public class SMLDecoder {
 	
 	protected static final Logger log = LoggerFactory.getLogger(SMLDecoder.class);
 
+	protected static boolean DUMP_RAW_SML=false;
+	
 	public static SMLMeterData decode(byte[] smlPayload) throws IOException {
 		return decode(smlPayload, true);
 	}
@@ -52,67 +48,59 @@ public class SMLDecoder {
 		
 		byte[] messagePayload=extractMessage(smlPayload);
 		
-		DataInputStream din=new DataInputStream(new ByteArrayInputStream(messagePayload));
-
-		SMLMeterData result=new SMLMeterData();
+		if (DUMP_RAW_SML) {
+			System.err.println(ByteUtil.toHex(messagePayload));
+			
+			System.err.println("--- Dump start");
+			SMLMessageParser.dumpRaw(messagePayload, System.err);
+			System.err.println("--- Dump end");
+			System.err.println();
+		}
 		
-		SmlMessage sml=new SmlMessage();
-		while (din.available()>0) {
-			boolean crcOk=sml.decodeAndCheck(din);
-			if (!crcOk) {
-				if (failOnCorruptMessagePart) {
-					throw new IOException("SML message crc error");
-				} else {
-					log.info("SML message crc error - proceeding with incomplete or corrupt message.");
-				}
-			}
-			decodeASNObject(result, sml.getMessageBody().getChoice());
-			if (!crcOk) {
-				break;
-			}
+		SMLMeterData result=new SMLMeterData();
+
+		for (SMLMessage sml: SMLMessageParser.parse(messagePayload)) {
+			decodeSMLObject(result, sml.getMessageBody());
 		}
 		
 		return result;
 	}
 	
-	protected static void decodeASNObject(SMLMeterData result, ASNObject asn) {
+	protected static void decodeSMLObject(SMLMeterData result,AbstractSMLObject sml) {
 		
-		if (asn==null) {
+		if (sml==null) {
 			return; // may happen on incomplete SML message
 		}
 		
-		if (asn instanceof SmlPublicCloseRes) {
+		if (sml instanceof SMLPublicCloseResponse) {
 			// no usable data
 			return;
 		}
 		
-		if (asn instanceof SmlPublicOpenRes) {
+		if (sml instanceof SMLPublicOpenResponse) {
 			if (result.meterId==null) {
-				result.meterId=decodeMeterId(((SmlPublicOpenRes)asn).getServerId());
+				result.meterId=decodeMeterId(((SMLPublicOpenResponse)sml).getServerId());
 			}
 			return;
 		}
 		
-		if (asn instanceof SmlGetListRes) {
-			SmlGetListRes res=(SmlGetListRes) asn;
+		if (sml instanceof SMLGetListResponse) {
+			SMLGetListResponse res=(SMLGetListResponse) sml;
 			
 			if (result.meterId==null) {
 				result.meterId=decodeMeterId(res.getServerId());
 			}
 			// my meter has "ActSensorTime" as index of seconds - is this somehow useful?
-			decodeASNObject(result, res.getValList());
-			return;
-		}
-		
-		if (asn instanceof SmlList) {
-			for (ASNObject o: ((SmlList)asn).seqArray()) {
-				decodeASNObject(result, o);
+			if (res.getValList()!=null) {
+				for (SMLListEntry e: res.getValList()) {
+					decodeSMLObject(result, e);
+				}
 			}
 			return;
 		}
 		
-		if (asn instanceof SmlListEntry) {
-			SmlListEntry e=(SmlListEntry) asn;
+		if (sml instanceof SMLListEntry) {
+			SMLListEntry e=(SMLListEntry) sml;
 
 			String obisCode=decodeObisCode(e.getObjName());
 			
@@ -129,6 +117,9 @@ public class SMLDecoder {
 				return;
 			}
 			if ("1-0:96.1.0*255".equals(obisCode)) { // meter id
+				return;
+			}
+			if ("1-0:96.5.0*255".equals(obisCode)) { // operation status
 				return;
 			}
 			if ("1-0:96.50.1*1".equals(obisCode)) { // manufacturer id
@@ -156,9 +147,9 @@ public class SMLDecoder {
 			Reading reading=new Reading();
 			reading.obisCode=obisCode;
 			reading.name=ObisNameMap.get(obisCode);
-			reading.unit=e.getUnit().toString();
-			if (e.getValue()!=null && e.getValue().getChoice()!=null) {
-				reading.value=decodeNumber(e.getValue().getChoice(),e.getScaler());
+			reading.unit=(e.getValUnit()==null)?null:e.getValUnit().toString();
+			if (e.getValue()!=null) {
+				reading.value=decodeNumber(e.getValue(),e.getScaler());
 			}
 
 			if (result.readings==null) {
@@ -169,74 +160,50 @@ public class SMLDecoder {
 			return;
 		}
 		
-		log.warn("ASNObject not implemented: ",asn.getClass().getName());
+		log.warn("SML object not implemented: ",sml.getClass().getName());
 		
 	}
 	
-	public static Number decodeNumber(ASNObject asn, Integer8 scaler) {
-		if (asn==null) {
+	public static Number decodeNumber(Object value, Integer scaler) {
+		if (value==null) {
 			return null;
 		}
 		
-		int sc=(scaler==null)?0:scaler.getIntVal();
+		int sc=(scaler==null)?0:scaler.intValue();
 
-		if (asn instanceof Integer8) {
-			byte val=((Integer8) asn).getVal();
+		if (value instanceof Byte) {
+			byte val=(Byte)value;
 			if (sc==0) {
 				return val;
 			}
 			return new BigDecimal(val).scaleByPowerOfTen(sc);
 		}
 
-		if (asn instanceof Integer16) {
-			short val=((Integer16) asn).getVal();
+		if (value instanceof Short) {
+			short val=(Short)value;
 			if (sc==0) {
 				return val;
 			}
 			return new BigDecimal(val).scaleByPowerOfTen(sc);
 		}
 		
-		if (asn instanceof Integer32) {
-			int val=((Integer32) asn).getVal();
+		if (value instanceof Integer) {
+			int val=(Integer) value;
 			if (sc==0) {
 				return val;
 			}
 			return new BigDecimal(val).scaleByPowerOfTen(sc);
 		}
 
-		if (asn instanceof Unsigned8) {
-			int val=((Unsigned8) asn).getVal();
-			if (sc==0) {
-				return val;
-			}
-			return new BigDecimal(val).scaleByPowerOfTen(sc);
-		}
-
-		if (asn instanceof Unsigned16) {
-			int val=((Unsigned16) asn).getVal();
+		if (value instanceof Long) {
+			long val=(Long) value;
 			if (sc==0) {
 				return val;
 			}
 			return new BigDecimal(val).scaleByPowerOfTen(sc);
 		}
 		
-		if (asn instanceof Unsigned32) {
-			int val=((Unsigned32) asn).getVal();
-			if (sc==0) {
-				return val;
-			}
-			return new BigDecimal(val).scaleByPowerOfTen(sc);
-		}
-
-		if (asn instanceof Unsigned64) {
-			long val=((Unsigned64) asn).getVal();
-			if (sc==0) {
-				return val;
-			}
-			return new BigDecimal(val).scaleByPowerOfTen(sc);
-		}
-		
-		log.warn("Number format not implemented: {}",asn.getClass().getName());
+		log.warn("Number conversion not implemented: {}",value.getClass().getName());
 		return null;
 	}
 	
@@ -257,10 +224,6 @@ public class SMLDecoder {
 		sb.append("*");
 		sb.append(bytes[5] & 0xff);
 		return sb.toString();
-	}
-	
-	public static String decodeMeterId(OctetString s) {
-		return (s==null) ? null : decodeMeterId(s.getValue());
 	}
 	
 	/**
