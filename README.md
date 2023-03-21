@@ -93,6 +93,18 @@ Configuration parameters:
 * `{value}`: The numeric value of the reading
 * `{unit}`: The unit of the reading or blank if there is no unit
 
+### OpenMetrics publisher
+
+Publishes metrics in [OpenMetrics format](https://github.com/OpenObservability/OpenMetrics/blob/main/specification/OpenMetrics.md) via HTTP. Usefull to publish to [VictoriaMetrics](https://docs.victoriametrics.com/url-examples.html#apiv1importprometheus) or [Prometheus pushgateway](https://github.com/prometheus/pushgateway/blob/master/README.md).
+
+Configuration parameters:
+
+* `PUBLISH_OPENMETRICS_ENABLED` (required) - set to `true` to enable publishing over MQTT
+* `PUBLISH_OPENMETRICS_URL` (required) - URL of the endpoint to publish to
+* `PUBLISH_OPENMETRICS_USERNAME` (optional) - username for HTTP basic authentification
+* `PUBLISH_OPENMETRICS_PASSWORD` (optional) - password for HTTP basic authentification
+
+
 ## Other configuration
 
 * `LOG_LEVEL` (default `info`) - Log level to use by the application. Valid values are `debug`, `info`, `warn` and `error`.

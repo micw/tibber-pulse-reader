@@ -6,7 +6,7 @@ TIBBER_PULSE_USERNAME: admin
 TIBBER_PULSE_PASSWORD: ABCD-1234
 
 # run every 15 seconds (default)
-#TIBBER_PULSE_CRON:*/15 * * * * *
+# TIBBER_PULSE_CRON:*/15 * * * * *
 
 # enable and configure publishing via MQTT
 # PUBLISH_MQTT_ENABLED: true
@@ -16,3 +16,9 @@ TIBBER_PULSE_PASSWORD: ABCD-1234
 # PUBLISH_MQTT_PASSWORD: secret
 # PUBLISH_MQTT_TOPIC: "{meterId}/{nameOrObisCode}"
 # PUBLISH_MQTT_VALUE: "{value}"
+
+# enable and configure publishing of OpenMetrics format to victoriametrics or prometheus push gateway
+# PUBLISH_OPENMETRICS_ENABLED: true
+# PUBLISH_OPENMETRICS_URL: https://vmserver.example.com/api/v1/import/prometheus
+# PUBLISH_OPENMETRICS_USERNAME: pushuser
+# PUBLISH_OPENMETRICS_PASSWORD: s3cr3t!

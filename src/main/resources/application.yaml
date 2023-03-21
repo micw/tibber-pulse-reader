@@ -27,3 +27,9 @@ publish:
     password: "${PUBLISH_MQTT_PASSWORD:}"
     topic: "${PUBLISH_MQTT_TOPIC:{meterId}/{nameOrObisCode}}"
     payload: "${PUBLISH_MQTT_VALUE:{value}}"
+  openmetrics:
+    enabled: "${PUBLISH_OPENMETRICS_ENABLED:false}"
+    url: "${PUBLISH_OPENMETRICS_URL}"
+    username: "${PUBLISH_OPENMETRICS_USERNAME:}"
+    password: "${PUBLISH_OPENMETRICS_PASSWORD:}"
+    
