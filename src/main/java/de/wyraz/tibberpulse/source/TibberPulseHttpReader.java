@@ -107,6 +107,7 @@ public class TibberPulseHttpReader implements CommandLineRunner {
 		} catch (Exception ex) {
 			log.warn("Unable to fetch data from tibber pulse bridge",ex);
 			if (shutdownOnError) {
+				log.warn("Terminating.");
 				ctx.close();
 				System.exit(1);
 			}
