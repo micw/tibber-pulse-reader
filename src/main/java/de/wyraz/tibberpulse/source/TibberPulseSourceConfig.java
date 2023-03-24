@@ -12,6 +12,9 @@ public class TibberPulseSourceConfig {
 		if ("http".equals(source)) {
 			return new TibberPulseHttpReader();
 		}
+		if ("mqtt".equals(source)) {
+			return new MQTTSource();
+		}
 		
 		throw new IllegalArgumentException("Source most be 'http' or 'mqtt'");
 	}

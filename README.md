@@ -62,9 +62,16 @@ Configuration parameters:
 
 ### MQTT access
 
-> **⚠ This method is not yet implemented**
-
 To access the MQTT data, the Tibber Pulse Bridge must be modified to talk to a local MQTT server. The local MQTT server must be configured to bridge to tibber's MQTT server. The process is described in https://github.com/MSkjel/LocalPulse2Tibber .
+
+Configuration parameters:
+
+* `TIBBER_PULSE_SOURCE=mqtt` (required) - enable the MQTT based access to Tibber Pulse Bridge
+* `MQTT_SOURCE_HOST` (required) - Hostname or IP address of the MQTT server to subscribe to
+* `MQTT_SOURCE_PORT` (default 1883) - Port of the MQTT server
+* `MQTT_SOURCE_USERNAME` (optional) - username for authentification if required by the MQTT server
+* `MQTT_SOURCE_PASSWORD` (optional) - password for authentification if required by the MQTT server
+* `MQTT_SOURCE_TOPIC` (required) - The topic to subscribe to and read SML from
 
 ## Publishers
 
@@ -110,6 +117,7 @@ Configuration parameters:
 * `LOG_LEVEL` (default `info`) - Log level to use by the application. Valid values are `debug`, `info`, `warn` and `error`.
     * run with `debug` to see all SML messages before/after decoding
 * `IGNORE_SML_CRC_ERRORS` (default `false`) - If set to true, an SML message containing CRC errors will still be processed. Only usefull for testing with problematic meters.
+* `PUBLISH_INTERVAL` (default empty) - Can be set to a cron expression to publish only one reading per interval.
 
 ### Filtering readings
 

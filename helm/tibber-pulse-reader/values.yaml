@@ -23,6 +23,11 @@ publish:
     #password: pass
     #topic: "{meterId}/{nameOrObisCode}"
     #payload: "{value}"
+  openmetrics:
+    enabled: false
+    #url: https://vmserver.example.com/api/v1/import/prometheus
+    #username: user
+    #password: pass
 
 #logLevel: debug
 
@@ -58,13 +63,6 @@ resources:
   requests:
   #   cpu: 100m
     memory: 100Mi
-
-autoscaling:
-  enabled: false
-  minReplicas: 1
-  maxReplicas: 100
-  targetCPUUtilizationPercentage: 80
-  # targetMemoryUtilizationPercentage: 80
 
 nodeSelector: {}
 

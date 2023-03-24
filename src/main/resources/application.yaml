@@ -8,6 +8,12 @@ tibber:
       username: ${TIBBER_PULSE_USERNAME:}
       password: ${TIBBER_PULSE_PASSWORD:}
       cron: ${TIBBER_PULSE_CRON:*/15 * * * * *}
+    mqtt:
+      host: "${MQTT_SOURCE_HOST}"
+      port: "${MQTT_SOURCE_PORT:1883}"
+      username: "${MQTT_SOURCE_USERNAME:}"
+      password: "${MQTT_SOURCE_PASSWORD:}"
+      topic: "${MQTT_SOURCE_TOPIC}"
 
 sml:
   ignoreCrcErrors: ${IGNORE_SML_CRC_ERRORS:false}
@@ -19,6 +25,7 @@ logging:
     
 publish:
   filters: ${PUBLISH_FILTERS:}
+  interval: "${PUBLISH_INTERVAL:}"
   mqtt:
     enabled: "${PUBLISH_MQTT_ENABLED:false}"
     host: "${PUBLISH_MQTT_HOST}"

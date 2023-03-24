@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: {{ include "tibber-pulse-reader.fullname" . }}
   labels:
-    {{- include "tibber-pulse-reader.labels" . | nindent 4 }}
+    {{- include "tibber-pulse-reader.labels" . | toYaml | nindent 4 }}
 spec:
   replicas: 1
   selector:
@@ -35,6 +35,7 @@ spec:
             - name: LOG_LEVEL
               value: "{{ .Values.logLevel }}"
             {{- end }}
+
             - name: TIBBER_PULSE_SOURCE
               value: {{ .Values.pulse.source | required "pulse.source  is required" }}
             - name: TIBBER_PULSE_HOST
@@ -49,10 +50,12 @@ spec:
             - name: TIBBER_PULSE_CRON
               value: "{{ .Values.pulse.cron }}"
             {{- end }}
+
             {{- if .Values.publish.filters }}
             - name: PUBLISH_FILTERS
               value: {{ .Values.publish.filters | quote }}
             {{- end }}
+
             {{- if .Values.publish.mqtt.enabled }}
             - name: PUBLISH_MQTT_ENABLED
               value: "true"
@@ -73,6 +76,19 @@ spec:
             {{- if .Values.publish.mqtt.payload }}
             - name: PUBLISH_MQTT_PAYLOAD
               value: {{ .Values.publish.mqtt.payload | quote }}
+            {{- end }}
+            {{- end }}
+
+            {{- if .Values.publish.openmetrics.enabled }}
+            - name: PUBLISH_OPENMETRICS_ENABLED
+              value: "true"
+            - name: PUBLISH_OPENMETRICS_URL
+              value: {{ .Values.publish.openmetrics.url | required "pulse.openmetrics.url is required" }}
+            {{- if .Values.publish.openmetrics.username }}
+            - name: PUBLISH_OPENMETRICS_USERNAME
+              value: {{ .Values.publish.openmetrics.username }}
+            - name: PUBLISH_OPENMETRICS_PASSWORD
+              value: {{ .Values.publish.openmetrics.password | required "publish.openmetrics.password is required if username is set" }}
             {{- end }}
             {{- end }}
           resources:
