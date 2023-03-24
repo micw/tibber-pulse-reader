@@ -70,7 +70,7 @@ public class MeterDataHandler {
 		if (publishInterval!=null) {
 			ZonedDateTime now=ZonedDateTime.now();
 			if (nextPublish!=null && now.isBefore(nextPublish)) {
-				log.debug("Skipping meter data due to publish interval restrictions:\n{}",data);
+				log.trace("Skipping meter data due to publish interval restrictions:\n{}",data);
 				return;
 			}
 			nextPublish=publishInterval.next(now);
