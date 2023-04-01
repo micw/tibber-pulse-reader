@@ -10,7 +10,7 @@ public class ByteUtil {
 		return sb.toString();
 	}
 
-	protected static char[] HEX_CHARS="0123456789ABCDEF".toCharArray();
+	public static char[] HEX_CHARS="0123456789ABCDEF".toCharArray();
 	
 	public static String toHex(byte[] bytes) {
 		if (bytes==null) {
@@ -43,6 +43,15 @@ public class ByteUtil {
 	}
 	public static String int32ToHex(long l) {
 		return toHex(new byte[] {
+			(byte) ((l >> 24) & 0xFF),
+			(byte) ((l >> 16) & 0xFF),
+			(byte) ((l >> 8) & 0xFF),
+			(byte) (l & 0xFF)
+		});
+	}
+	public static String int40ToHex(long l) {
+		return toHex(new byte[] {
+			(byte) ((l >> 32) & 0xFF),
 			(byte) ((l >> 24) & 0xFF),
 			(byte) ((l >> 16) & 0xFF),
 			(byte) ((l >> 8) & 0xFF),

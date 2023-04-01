@@ -8,7 +8,7 @@ public class SMLListEntry extends AbstractSMLObject {
 	protected Long status;
 	protected SMLTime valTime;
 	protected EUnit valUnit;
-	protected Integer scaler;
+	protected Number scaler;
 	protected Object value;
 	protected byte[] valueSignature;
 	
@@ -24,7 +24,7 @@ public class SMLListEntry extends AbstractSMLObject {
 	public EUnit getValUnit() {
 		return valUnit;
 	}
-	public Integer getScaler() {
+	public Number getScaler() {
 		return scaler;
 	}
 	public Object getValue() {

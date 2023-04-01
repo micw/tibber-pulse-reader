@@ -9,12 +9,19 @@ pulse:
   # password: ABC-DEF
   # cron: "*/15 * * * * *"
 
+  # source: mqtt
+  # host: 192.168.1.3
+  # username: mqttuser
+  # password: mqttpass
+  # topic: values/sml
+
 publish:
 #  filters: |
 #    energyImportTotal=kWh
 #    energyExportTotal=kWh
 #    energyImportTariff1=ignore
 #    energyImportTariff2=ignore
+#  interval: "0/15 * * * * *"
   mqtt:
     enabled: false
     #host: 192.168.1.3

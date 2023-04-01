@@ -16,6 +16,8 @@ public class ObisNameMap {
 		obisNameMap.put("1-0:1.8.1*255", "energyImportTariff1");
 		obisNameMap.put("1-0:1.8.2*255", "energyImportTariff2");
 		obisNameMap.put("1-0:2.8.0*255", "energyExportTotal");
+		obisNameMap.put("1-0:2.8.1*255", "energyExportTariff1");
+		obisNameMap.put("1-0:2.8.2*255", "energyExportTariff2");
 		obisNameMap.put("1-0:16.7.0*255", "powerTotal");
 		obisNameMap.put("1-0:36.7.0*255", "powerL1");
 		obisNameMap.put("1-0:56.7.0*255", "powerL2");

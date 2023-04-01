@@ -19,8 +19,10 @@ import de.wyraz.sml.SMLGetListResponse;
 import de.wyraz.sml.SMLListEntry;
 import de.wyraz.sml.SMLMessage;
 import de.wyraz.sml.SMLMessageParser;
+import de.wyraz.sml.SMLMessageParser;
 import de.wyraz.sml.SMLPublicCloseResponse;
 import de.wyraz.sml.SMLPublicOpenResponse;
+import de.wyraz.sml.asn1.ASN1BERTokenizer;
 import de.wyraz.tibberpulse.sml.SMLMeterData.Reading;
 import de.wyraz.tibberpulse.util.ByteUtil;
 
@@ -52,7 +54,7 @@ public class SMLDecoder {
 			System.err.println(ByteUtil.toHex(messagePayload));
 			
 			System.err.println("--- Dump start");
-			SMLMessageParser.dumpRaw(messagePayload, System.err);
+			new ASN1BERTokenizer(messagePayload).dump(System.err);
 			System.err.println("--- Dump end");
 			System.err.println();
 		}
@@ -116,6 +118,9 @@ public class SMLDecoder {
 			if ("1-0:0.0.9*255".equals(obisCode)) { // meter serial
 				return;
 			}
+			if ("1-0:0.0.0*255".equals(obisCode)) { // property number
+				return;
+			}
 			if ("1-0:96.1.0*255".equals(obisCode)) { // meter id
 				return;
 			}
@@ -143,6 +148,9 @@ public class SMLDecoder {
 			if ("1-0:97.97.0*0".equals(obisCode)) { // status register
 				return;
 			}
+			if ("129-129:199.130.5*255".equals(obisCode)) { // public key
+				return;
+			}
 			
 			Reading reading=new Reading();
 			reading.obisCode=obisCode;
@@ -164,7 +172,7 @@ public class SMLDecoder {
 		
 	}
 	
-	public static Number decodeNumber(Object value, Integer scaler) {
+	public static Number decodeNumber(Object value, Number scaler) {
 		if (value==null) {
 			return null;
 		}
@@ -202,6 +210,15 @@ public class SMLDecoder {
 			}
 			return new BigDecimal(val).scaleByPowerOfTen(sc);
 		}
+		
+		if (value instanceof BigInteger) {
+			BigInteger val=(BigInteger) value;
+			if (sc==0) {
+				return val;
+			}
+			return new BigDecimal(val).scaleByPowerOfTen(sc);
+		}
+		
 		
 		log.warn("Number conversion not implemented: {}",value.getClass().getName());
 		return null;

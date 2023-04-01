@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: {{ include "tibber-pulse-reader.fullname" . }}
   labels:
-    {{- include "tibber-pulse-reader.labels" . | toYaml | nindent 4 }}
+    {{- include "tibber-pulse-reader.labels" . | nindent 4 }}
 spec:
   replicas: 1
   selector:
@@ -38,6 +38,8 @@ spec:
 
             - name: TIBBER_PULSE_SOURCE
               value: {{ .Values.pulse.source | required "pulse.source  is required" }}
+
+            {{- if eq .Values.pulse.source "http" }}
             - name: TIBBER_PULSE_HOST
               value: {{ .Values.pulse.host | required "pulse.host is required" }}
             {{- if .Values.pulse.username }}
@@ -50,10 +52,29 @@ spec:
             - name: TIBBER_PULSE_CRON
               value: "{{ .Values.pulse.cron }}"
             {{- end }}
+            {{- end }}
+
+            {{- if eq .Values.pulse.source "mqtt" }}
+            - name: MQTT_SOURCE_HOST
+              value: {{ .Values.pulse.host | required "pulse.host is required" }}
+            {{- if .Values.pulse.username }}
+            - name: MQTT_SOURCE_USERNAME
+              value: {{ .Values.pulse.username }}
+            - name: MQTT_SOURCE_PASSWORD
+              value: {{ .Values.pulse.password | required "pulse.password is required if username is set" }}
+            {{- end }}
+            - name: MQTT_SOURCE_TOPIC
+              value: {{ .Values.pulse.topic | required "pulse.topic is required" }}
+            {{- end }}
 
             {{- if .Values.publish.filters }}
             - name: PUBLISH_FILTERS
               value: {{ .Values.publish.filters | quote }}
+            {{- end }}
+
+            {{- if .Values.publish.interval }}
+            - name: PUBLISH_INTERVAL
+              value: {{ .Values.publish.interval | quote }}
             {{- end }}
 
             {{- if .Values.publish.mqtt.enabled }}
