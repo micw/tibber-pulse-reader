@@ -86,7 +86,7 @@ public class MQTTSource {
 	protected void handleMessage(String topic, MqttMessage message) {
 		SMLMeterData data;
 		try {
-			byte[] payload=Hex.decodeHex(new String(message.getPayload(), StandardCharsets.UTF_8));
+			byte[] payload=message.getPayload();
 			
 			data=SMLDecoder.decode(payload, !ignoreCrcErrors);
 		} catch (Exception ex) {
