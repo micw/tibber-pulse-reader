@@ -49,7 +49,7 @@ public class MQTTSource {
 	
 	@PostConstruct
 	public void startMqttClient() throws Exception {
-		mqttClient = new MqttClient("tcp://"+mqttHost+":"+mqttPort,UUID.randomUUID().toString(), new MemoryPersistence());
+		mqttClient = new MqttClient(mqttHost+":"+mqttPort,UUID.randomUUID().toString(), new MemoryPersistence());
 		MqttConnectOptions options = new MqttConnectOptions();
 		options.setAutomaticReconnect(false);
 		options.setCleanSession(true);
