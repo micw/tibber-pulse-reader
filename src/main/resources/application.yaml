@@ -11,6 +11,7 @@ tibber:
     mqtt:
       host: "${MQTT_SOURCE_HOST}"
       port: "${MQTT_SOURCE_PORT:1883}"
+      tls: "${MQTT_SOURCE_TLS:false}"
       username: "${MQTT_SOURCE_USERNAME:}"
       password: "${MQTT_SOURCE_PASSWORD:}"
       topic: "${MQTT_SOURCE_TOPIC}"

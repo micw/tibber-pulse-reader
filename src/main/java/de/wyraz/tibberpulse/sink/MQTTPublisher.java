@@ -27,6 +27,9 @@ public class MQTTPublisher implements IMeterDataPublisher {
 	
 	@Value("${publish.mqtt.host}")
 	protected String mqttHost;
+
+	@Value("${publish.mqtt.tls:false}")
+	protected boolean mqttTls;
 	
 	@Value("${publish.mqtt.port:1883}")
 	protected int mqttPort;
@@ -47,7 +50,8 @@ public class MQTTPublisher implements IMeterDataPublisher {
 	
 	@PostConstruct
 	public void startMqttClient() throws Exception {
-		mqttClient = new MqttClient("tcp://"+mqttHost+":"+mqttPort,UUID.randomUUID().toString(), new MemoryPersistence());
+		String protocol=mqttTls?"ssl":"tcp";
+		mqttClient = new MqttClient(protocol+"://"+mqttHost+":"+mqttPort,UUID.randomUUID().toString(), new MemoryPersistence());
 		MqttConnectOptions options = new MqttConnectOptions();
 		options.setAutomaticReconnect(false);
 		options.setCleanSession(true);

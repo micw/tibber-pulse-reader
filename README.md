@@ -68,7 +68,8 @@ Configuration parameters:
 
 * `TIBBER_PULSE_SOURCE=mqtt` (required) - enable the MQTT based access to Tibber Pulse Bridge
 * `MQTT_SOURCE_HOST` (required) - Hostname or IP address of the MQTT server to subscribe to
-* `MQTT_SOURCE_PORT` (default 1883) - Port of the MQTT server
+* `MQTT_SOURCE_TLS` (default `false`) - set to true to use TLS/SSL for MQTT connection
+* `MQTT_SOURCE_PORT` (default `1883`) - Port of the MQTT server
 * `MQTT_SOURCE_USERNAME` (optional) - username for authentification if required by the MQTT server
 * `MQTT_SOURCE_PASSWORD` (optional) - password for authentification if required by the MQTT server
 * `MQTT_SOURCE_TOPIC` (required) - The topic to subscribe to and read SML from
@@ -85,6 +86,7 @@ Configuration parameters:
 
 * `PUBLISH_MQTT_ENABLED` (required) - set to `true` to enable publishing over MQTT
 * `PUBLISH_MQTT_HOST` (required) - Hostname or IP address of the MQTT server to publish to
+* `PUBLISH_MQTT_TLS` (default `false`) - set to true to use TLS/SSL for MQTT connection
 * `PUBLISH_MQTT_PORT` (default 1883) - Port of the MQTT server
 * `PUBLISH_MQTT_USERNAME` (optional) - username for authentification if required by the MQTT server
 * `PUBLISH_MQTT_PASSWORD` (optional) - password for authentification if required by the MQTT server

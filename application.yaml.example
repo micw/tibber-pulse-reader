@@ -11,6 +11,7 @@ TIBBER_PULSE_PASSWORD: ABCD-1234
 # enable and configure publishing via MQTT
 # PUBLISH_MQTT_ENABLED: true
 # PUBLISH_MQTT_HOST: mqtt.localnet
+# PUBLISH_MQTT_TLS: false
 # PUBLISH_MQTT_PORT: 1883
 # PUBLISH_MQTT_USERNAME: tibberdata
 # PUBLISH_MQTT_PASSWORD: secret

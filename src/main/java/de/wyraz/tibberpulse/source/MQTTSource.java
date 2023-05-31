@@ -33,6 +33,9 @@ public class MQTTSource {
 	@Value("${tibber.pulse.mqtt.host}")
 	protected String mqttHost;
 	
+	@Value("${tibber.pulse.mqtt.tls:false}")
+	protected boolean mqttTls;
+	
 	@Value("${tibber.pulse.mqtt.port:1883}")
 	protected int mqttPort;
 
@@ -49,7 +52,10 @@ public class MQTTSource {
 	
 	@PostConstruct
 	public void startMqttClient() throws Exception {
-		mqttClient = new MqttClient("tcp://"+mqttHost+":"+mqttPort,UUID.randomUUID().toString(), new MemoryPersistence());
+		
+		String protocol=mqttTls?"ssl":"tcp";
+		
+		mqttClient = new MqttClient(protocol+"://"+mqttHost+":"+mqttPort,UUID.randomUUID().toString(), new MemoryPersistence());
 		MqttConnectOptions options = new MqttConnectOptions();
 		options.setAutomaticReconnect(false);
 		options.setCleanSession(true);
