@@ -73,6 +73,7 @@ Configuration parameters:
 * `MQTT_SOURCE_USERNAME` (optional) - username for authentification if required by the MQTT server
 * `MQTT_SOURCE_PASSWORD` (optional) - password for authentification if required by the MQTT server
 * `MQTT_SOURCE_TOPIC` (required) - The topic to subscribe to and read SML from
+* `MQTT_SOURCE_PAYLOAD_ENCODING` (default `HEX`) - Encoding of the payload. Supported values: `HEX`, `BINARY`
 
 ## Publishers
 

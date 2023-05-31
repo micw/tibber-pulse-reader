@@ -15,6 +15,7 @@ tibber:
       username: "${MQTT_SOURCE_USERNAME:}"
       password: "${MQTT_SOURCE_PASSWORD:}"
       topic: "${MQTT_SOURCE_TOPIC}"
+      payloadEncoding: "${MQTT_SOURCE_PAYLOAD_ENCODING:HEX}"
 
 sml:
   ignoreCrcErrors: ${IGNORE_SML_CRC_ERRORS:false}

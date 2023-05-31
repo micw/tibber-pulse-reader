@@ -47,6 +47,9 @@ public class MQTTSource {
 
 	@Value("${tibber.pulse.mqtt.topic}")
 	protected String mqttTopic;
+
+	@Value("${tibber.pulse.mqtt.payloadEncoding}")
+	protected PayloadEncoding mqttPayloadEncoding;
 	
 	protected IMqttClient mqttClient;
 	
@@ -92,7 +95,10 @@ public class MQTTSource {
 	protected void handleMessage(String topic, MqttMessage message) {
 		SMLMeterData data;
 		try {
-			byte[] payload=Hex.decodeHex(new String(message.getPayload(), StandardCharsets.UTF_8));
+			byte[] payload=mqttPayloadEncoding.decode(message.getPayload());
+			if (payload==null) {
+				return;
+			}
 			
 			data=SMLDecoder.decode(payload, !ignoreCrcErrors);
 		} catch (Exception ex) {
