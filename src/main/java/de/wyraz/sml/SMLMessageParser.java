@@ -190,7 +190,8 @@ public class SMLMessageParser {
 		
 		if (choice==0x01) {
 			SMLTimeSecIndex time=new SMLTimeSecIndex();
-			time.secIndex=tokenizer.readUnsigned32(false);
+			// Spec Unsigned32 but Meter from testDZG_DVS_7412_2_jmberg uses Unsigned8 here
+			time.secIndex=((Number)tokenizer.readNext(Type.UNSIGNED,-1,false)).longValue();
 			return time;
 		}
 
