@@ -73,6 +73,12 @@ public class TibberPulseHttpReader implements CommandLineRunner {
 			byte[] payload;
 			try {
 				payload=EntityUtils.toByteArray(resp.getEntity());
+				
+				if (payload.length==0) {
+					log.debug("Received no data");
+					return;
+				}
+				
 			} catch (Exception ex) {
 				log.warn("Unable to extract payload from response",ex);
 				if (shutdownOnError) {
