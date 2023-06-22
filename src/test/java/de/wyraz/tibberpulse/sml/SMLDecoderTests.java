@@ -192,6 +192,30 @@ public class SMLDecoderTests {
 				);
 	}
 	
+	@Test
+	public void testSMLDecoder_eHZ_PW8E2A6L0HQ2D() throws Exception {
+		// Test for issue reported in https://github.com/micw/tibber-pulse-reader/issues/15
 		
+		String payload="1b1b1b1b0101010176050013f6ff6200620072630101760107ffffffffffff050006a7ab0b0a01454d480000c312a17262016406aea2620163b7fa0076050013f70062006200726307017707ffffffffffff0b0a01454d480000c312a1070100620affff7262016406aea27577070100603201010101010104454d480177070100600100ff010101010b0a01454d480000c312a10177070100010800ff640801047262016406aea2621e52ff6403e05a0177070100020800ff017262016406aea2621e52ff6367540177070100100700ff0101621b520052240101016305eb0076050013f7016200620072630201710163fd5c001b1b1b1b1a000d95";
+		
+		SMLMeterData data=SMLDecoder.decode(Hex.decodeHex(payload), false);
+		
+		System.err.println(data);
+		
+		assertThat(data).isNotNull();
+		
+		assertThat(data.getMeterId()).isEqualTo("1EMH0012784289");
+		
+		assertThat(data.getReadings())
+			.isNotNull()
+			.extracting(Object::toString)
+			.containsExactlyInAnyOrder(
+					 "1-0:1.8.0*255 / energyImportTotal = 25404.2 WATT_HOUR",
+					 "1-0:2.8.0*255 / energyExportTotal = 2645.2 WATT_HOUR",
+					 "1-0:16.7.0*255 / powerTotal = 36 WATT"
+				);
+	}
+	
+	
 	
 }
