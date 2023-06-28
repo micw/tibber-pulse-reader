@@ -1,4 +1,4 @@
-FROM openjdk:17-alpine
+FROM openjdk:17-bullseye
 
 ADD target/tibber-pulse-reader-1.0.0-SNAPSHOT.jar /tibber-pulse-reader.jar
 
