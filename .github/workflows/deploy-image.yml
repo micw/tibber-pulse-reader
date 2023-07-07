@@ -57,7 +57,7 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: ${{ steps.meta.outputs.tags }}, ${{ GITHUB_REPOSITORY }}:latest
+          tags: ${{ steps.meta.outputs.tags }}, ${{ env.GITHUB_REPOSITORY }}:latest
           labels: ${{ steps.meta.outputs.labels }}
 
       - name: Build and push Docker image for Alpine
