@@ -1,5 +1,7 @@
 # Tibber Pulse Reader
 
+> :warning: **Not maintained anymore!** I have integrated the code into https://github.com/micw/homedatabroker. New features are added there.
+
 This tool reads out data from a Tibber Pulse locally (without roundtrip trough the cloud).
 
 This is an early version with poor documentation and a lot work-in-progress.
