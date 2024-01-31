@@ -1,6 +1,0 @@
-apiVersion: v2
-name: tibber-pulse-reader
-
-type: application
-
-version: 0.1.0
